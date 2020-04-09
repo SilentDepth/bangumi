@@ -1,7 +1,7 @@
 @tailwind base;
 
 html {
-  @apply font-sans antialiased;
+  @apply leading-none font-sans antialiased;
 
   font-size: 16px;
 }
