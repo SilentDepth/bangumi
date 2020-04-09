@@ -4,7 +4,7 @@ module.exports = {
     autoprefixer: {},
     ...process.env.NODE_ENV !== 'production' ? {} : {'@fullhuman/postcss-purgecss': {
       content: [
-        './src/**.vue',
+        './src/**/*.vue',
       ],
       defaultExtractor: content => content.match(/[\w-/.:]+(?<!:)/g) || [],
     }},
