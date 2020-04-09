@@ -1,7 +1,7 @@
 module.exports = {
   devServer: {
     proxy: {
-      '^/oauth/access_token': {
+      '^/oauth': {
         target: 'https://bgm.tv',
         changeOrigin: true,
       },
