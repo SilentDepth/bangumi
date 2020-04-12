@@ -1,71 +1,65 @@
 <template>
-  <div class="_el mx-auto py-10 flex flex-col" style="width: 800px;">
-    <div class="border border-gray-300 rounded-md overflow-hidden">
-      <button class="block w-full px-3 py-2 underline" @click="getProgress">Get Progress</button>
-      <div class="bg-gray-100 flex flex-wrap -ml-px">
-        <div v-for="subject of progressData" :key="subject.id" class="flex-grow-0 flex-shrink w-1/2 p-5 border-t border-l border-gray-300 flex items-center">
-          <img :src="subject.image" alt="" class="flex-none mr-4">
-          <p class="flex-1">
-            <span class="text-lg">{{ subject.name }}</span>
-            <br>
-            <span class="inline-block pt-3 text-gray-700">{{ subject.name_cn }}</span>
-          </p>
-        </div>
-      </div>
-    </div>
+  <div v-if="1" class="_el mx-auto py-10 flex flex-col" style="width: 900px;">
+    <section class="flex flex-col items-center">
+      <h1 v-if="!myCollections" class="text-xl text-gray-500">读取进度数据...</h1>
+      <h1 v-else class="text-xl text-red-400">我正在看 {{ myCollections.length }} 部作品</h1>
+      <ul v-if="myCollections" class="mt-8 grid grid-cols-5 gap-8 items-end justify-between">
+        <li v-for="collection of myCollections.sort((a, b) => a.lasttouch - b.lasttouch)" :key="collection.subject_id">
+          <CollectionCover :data="collection" />
+        </li>
+      </ul>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref} from 'vue'
+  import {defineComponent, ref, watch} from 'vue'
+
+  import CollectionCover from '@/components/CollectionCover.vue'
+  import useAuthorization from '@/composables/authorization'
+  import useBgmApi from '@/composables/bgm-api'
 
   export default defineComponent({
     name: 'HomeView',
 
+    components: {
+      CollectionCover,
+    },
+
     setup () {
-      const progressData = ref([] as any[])
+      const {isAuthorized, userId} = useAuthorization()
+      const {getUserCollection} = useBgmApi()
+      const myCollections = ref(undefined as UserCollectionMedium[] | undefined)
+
+      watch(isAuthorized, async value => {
+        if (value) {
+          myCollections.value = await getUserCollection(userId.value, 'watching')
+          console.log(myCollections.value)
+        }
+      }, {immediate: true})
+
 
       return {
-        progressData,
+        myCollections,
 
-        async getProgress () {
-          // const progress = await fetch(`/api/user/${userId.value}/progress`).then(res => res.json())
-          //
-          // const fetchSubject = (id: string) => fetch(`/api/subject/${id}`)
-          // for (const {subject_id} of progress) {
-          //   const subject = await fetchSubject(subject_id)
-          //     .then(res => res.ok ? res : fetchSubject(subject_id))
-          //     .then(res => res.json())
-          //     .catch(reason => ({name: reason}))
-          //   progressData.value.push({
-          //     id: subject.id,
-          //     name: subject.name,
-          //     name_cn: subject.name_cn,
-          //     image: subject.images.common,
-          //   })
-          // }
-        },
+        // async getProgress () {
+        //   const progress = await fetch(`/api/user/${userId.value}/progress`).then(res => res.json())
+        //
+        //   const fetchSubject = (id: string) => fetch(`/api/subject/${id}`)
+        //   for (const {subject_id} of progress) {
+        //     const subject = await fetchSubject(subject_id)
+        //       .then(res => res.ok ? res : fetchSubject(subject_id))
+        //       .then(res => res.json())
+        //       .catch(reason => ({name: reason}))
+        //     progressData.value.push({
+        //       id: subject.id,
+        //       name: subject.name,
+        //       name_cn: subject.name_cn,
+        //       image: subject.images.common,
+        //     })
+        //   }
+        // },
       }
     },
   })
 </script>
-
-<style lang="scss" scoped>
-  ._el {
-    > :not(:first-child) {
-      @apply mt-10;
-    }
-  }
-
-  ._text-code {
-    font-size: 13px;
-  }
-
-  ._leading-code {
-    line-height: 21px;
-  }
-
-  ._max-h-pre {
-    max-height: 400px;
-  }
-</style>

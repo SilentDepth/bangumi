@@ -20,9 +20,9 @@ function getUser (username: string | number): Promise<User> {
  * @param ids           - 收藏条目 ID（用于批量查询收藏状态；需要将条目 ID 以半角逗号分隔，如：1,2,4,6）
  * @param responseGroup - 返回数据大小（small 不包含条目详细信息）
  */
-function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids?: string | null, responseGroup?: 'medium'): Promise<UserCollectionMedium>
-function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids?: string | null, responseGroup?: 'small'): Promise<UserCollectionSmall>
-function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids: string | null = null, responseGroup: 'small' | 'medium' = 'medium'): Promise<UserCollectionSmall | UserCollectionMedium> {
+function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids?: string | null, responseGroup?: 'medium'): Promise<UserCollectionMedium[]>
+function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids?: string | null, responseGroup?: 'small'): Promise<UserCollectionSmall[]>
+function getUserCollection (username: string | number, cat: 'watching' | 'all_watching', ids: string | null = null, responseGroup: 'small' | 'medium' = 'medium'): Promise<UserCollectionSmall[] | UserCollectionMedium[]> {
   const query = stringifyQuery({
     cat,
     ...ids && {ids},

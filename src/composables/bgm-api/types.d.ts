@@ -204,7 +204,7 @@ interface UserCollectionMediumInfo extends UserCollectionBasicInfo {
      * 条目中文名称
      * @example "人形电脑天使心"
      */
-    name_cn: string
+    name_cn?: string
     /**
      * 剧情简介
      * @example "在不久的将来,电子技术飞速发展,电脑成为人们生活中不可缺少的一部分……"
