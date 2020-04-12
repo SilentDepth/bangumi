@@ -103,6 +103,8 @@ export default function useAuthorization () {
     userId,
     lastRefresh,
 
+    isAuthorized: computed(() => Boolean(accessToken.value)),
+
     authorize,
     retrieveStatus,
     refresh,

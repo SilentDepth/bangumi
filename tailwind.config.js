@@ -2,9 +2,12 @@ module.exports = {
   theme: {
     extend: {
       fill: theme => ({
-        current: 'current-color',
+        current: 'currentColor',
         ...theme('colors'),
       }),
+      right: {
+        full: '100%',
+      },
     },
   },
   plugins: [

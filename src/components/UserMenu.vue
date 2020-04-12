@@ -1,5 +1,11 @@
 <template>
-  <div class="fixed top-0 right-0 m-4 bg-red-400 rounded-md text-white overflow-hidden">
+  <div :class="['fixed top-0 right-0 m-4 bg-red-400 rounded-md text-white', {'overflow-hidden': isAuthorized}]">
+    <div v-if="!isAuthorized" class="absolute top-0 right-full h-full text-red-400 whitespace-no-wrap flex items-center" style="margin-right: 20px;">
+      <span>点击登录</span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current _animation-bouncing">
+        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" />
+      </svg>
+    </div>
     <div :class="['flex items-center', isCollapsed ? 'p-0.5' : 'p-1']">
       <button class="rounded overflow-hidden flex" @click="onClickMenuButton">
         <img v-if="user" :src="user.avatar.medium" :alt="user.nickname" :class="isCollapsed ? 'w-10 h-10' : 'w-12 h-12'">
@@ -13,7 +19,7 @@
       </p>
     </div>
     <div v-if="user" v-show="!isCollapsed" class="border-t border-red-300">
-      <button class="block w-full p-3 hover:bg-blue-500" @click="clear">清除验证数据</button>
+      <button class="block w-full p-3 hover:bg-blue-500" @click="clear">清除本地数据</button>
     </div>
   </div>
 </template>
@@ -31,7 +37,7 @@
       const menuRoot = ref(null as Element | null)
       const isCollapsed = ref(true)
 
-      const {accessToken, userId, authorize, retrieveStatus, refresh, clear: clearAuth} = useAuthorization()
+      const {isAuthorized, accessToken, userId, authorize, retrieveStatus, refresh, clear: clearAuth} = useAuthorization()
 
       function onClickMenuButton () {
         if (!userId.value) {
@@ -69,6 +75,7 @@
       watch(userId, async value => value && (user.value = await getUser(value)), {immediate: true})
 
       return {
+        isAuthorized,
         menuRoot,
         isCollapsed,
 
@@ -80,3 +87,19 @@
     },
   })
 </script>
+
+<style lang="scss" scoped>
+  ._animation-bouncing {
+    animation: 2s cubic-bezier(0.85, 0, 0.15, 1) infinite bouncing;
+
+    @keyframes bouncing {
+      0%, 70% {
+        transform: translateX(0);
+      }
+
+      35% {
+        transform: translateX(15px);
+      }
+    }
+  }
+</style>
