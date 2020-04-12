@@ -33,7 +33,7 @@
 
     setup () {
       const viewState = ref(ViewState.Init as ViewState)
-      const {appId, appSecret, accessToken, refreshToken, userId, expiresIn} = useAuthorization()
+      const {appId, appSecret, accessToken, refreshToken, userId, lastRefresh} = useAuthorization()
 
       const iframeSrc = computed(() => {
         const query = stringifyQuery({
@@ -98,7 +98,7 @@
                 accessToken.value = data.access_token
                 refreshToken.value = data.refresh_token
                 userId.value = data.user_id
-                expiresIn.value = data.expires_in
+                lastRefresh.value = Date.now()
               })
             return
           }

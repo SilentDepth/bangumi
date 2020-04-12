@@ -39,8 +39,30 @@ function createProxy (target: typeof local) {
   })
 }
 
+function get (key: string, session: boolean = false) {
+  return computed({
+    get: () => (session ? sessionProxy : localProxy)[key],
+    set: value => set(key, value, session),
+  })
+}
+
 function set (key: string, value: string, session: boolean = false) {
   (session ? sessionProxy : localProxy)[key] = value
+}
+
+function remove (key: string, session: boolean = false) {
+  delete (session ? sessionProxy : localProxy)[key]
+}
+
+function clear (target?: 'local' | 'session') {
+  const _clear = (target: typeof localProxy) => {
+    for (const key of Object.keys(target)) {
+      delete target[key]
+    }
+  }
+
+  if ((target ?? 'local') === 'local') _clear(localProxy)
+  if ((target ?? 'session') === 'session') _clear(sessionProxy)
 }
 
 export default function useStorage () {
@@ -48,15 +70,9 @@ export default function useStorage () {
     local: localProxy,
     session: sessionProxy,
 
-    get: (key: string, session: boolean = false) => computed({
-      get: () => (session ? sessionProxy : localProxy)[key],
-      set: value => set(key, value, session),
-    }),
-
+    get,
     set,
-
-    remove (key: string, session: boolean = false) {
-      delete (session ? sessionProxy : localProxy)[key]
-    },
+    remove,
+    clear,
   }
 }
