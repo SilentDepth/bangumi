@@ -94,16 +94,6 @@ function clear () {
   clearStorage()
 }
 
-function _fetch (input: Request | string, init: RequestInit = {}): Promise<Response> {
-  return fetch(input, {
-    ...init,
-    headers: {
-      ...init.headers,
-      'Authorization': `Bearer ${accessToken.value}`,
-    },
-  })
-}
-
 export default function useAuthorization () {
   return {
     appId,
@@ -117,7 +107,5 @@ export default function useAuthorization () {
     retrieveStatus,
     refresh,
     clear,
-
-    fetch: _fetch,
   }
 }
