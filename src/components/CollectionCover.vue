@@ -1,18 +1,16 @@
 <template>
-  <div class="_w-collection-cover rounded-md shadow hover:shadow-md transition duration-100 ease-linear">
+  <div class="rounded-md shadow">
     <img :src="subject.images.common" alt="" class="rounded-t-md">
     <div class="h-1 bg-gray-300"><div class="h-1 bg-red-400" :style="{width: `${progress * 100}%`}"></div></div>
     <div class="p-2 text-sm bg-gray-100 rounded-b-md">
-      <p class="truncate">{{ subject.name }}</p>
-      <p v-show="subject.name_cn" class="mt-2 text-gray-600 truncate">{{ subject.name_cn }}</p>
+      <p :title="subject.name" class="truncate">{{ subject.name }}</p>
+      <p v-show="subject.name_cn" :title="subject.name_cn" class="mt-2 text-gray-600 truncate">{{ subject.name_cn }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
   import {computed, defineComponent, PropType} from 'vue'
-
-  import {numberVal} from '@/components/Debugger.vue'
 
   export default defineComponent({
     name: 'CollectionCover',
@@ -31,15 +29,7 @@
       return {
         subject,
         progress,
-
-        numberVal,
       }
     },
   })
 </script>
-
-<style scoped>
-  ._w-collection-cover {
-    width: 150px;
-  }
-</style>

@@ -1,13 +1,15 @@
 <template>
-  <div v-if="1" class="_el mx-auto py-10 flex flex-col" style="width: 900px;">
+  <div class="_el mx-auto py-10 flex flex-col">
     <section class="flex flex-col items-center">
       <h1 v-if="!myCollections" class="text-xl text-gray-500">读取进度数据...</h1>
-      <h1 v-else class="text-xl text-red-400">我正在看 {{ myCollections.length }} 部作品</h1>
-      <ul v-if="myCollections" class="mt-8 grid grid-cols-5 gap-8 items-end justify-between">
-        <li v-for="collection of myCollections.sort((a, b) => a.lasttouch - b.lasttouch)" :key="collection.subject_id">
-          <CollectionCover :data="collection" />
-        </li>
-      </ul>
+      <template v-else>
+        <h1 class="text-xl text-red-400">我正在看 {{ myCollections.length }} 部作品</h1>
+        <SubjectGrid :data="myCollections.sort((a, b) => a.lasttouch - b.lasttouch)" class="mx-auto mt-5">
+          <template #default="{item: it}">
+            <CollectionCover :data="it" />
+          </template>
+        </SubjectGrid>
+      </template>
     </section>
   </div>
 </template>
@@ -15,6 +17,7 @@
 <script lang="ts">
   import {defineComponent, ref, watch} from 'vue'
 
+  import SubjectGrid from '@/components/SubjectGrid.vue'
   import CollectionCover from '@/components/CollectionCover.vue'
   import useAuthorization from '@/composables/authorization'
   import useBgmApi from '@/composables/bgm-api'
@@ -23,6 +26,7 @@
     name: 'HomeView',
 
     components: {
+      SubjectGrid,
       CollectionCover,
     },
 
