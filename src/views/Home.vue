@@ -38,7 +38,6 @@
       watch(isAuthorized, async value => {
         if (value) {
           myCollections.value = await getUserCollection(userId.value, 'watching')
-          console.log(myCollections.value)
         }
       }, {immediate: true})
 
